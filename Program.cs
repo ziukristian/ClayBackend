@@ -19,6 +19,7 @@ builder.Services.AddAuthentication()
     .AddBearerToken(IdentityConstants.BearerScheme);
 
 builder.Services.AddIdentityCore<User>()
+    .AddRoles<Role>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddApiEndpoints();
 
@@ -34,8 +35,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 
     // Custom extension method
-    app.Migrate();
+    app.ApplyMigrations();
 }
+
+app.SeedRoles();
 
 app.UseHttpsRedirection();
 
