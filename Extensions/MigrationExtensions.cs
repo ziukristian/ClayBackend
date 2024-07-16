@@ -18,8 +18,8 @@ namespace ClayBackend.Extensions
         {
             var roles = new List<Role>
             {
-                new Role { Name = "Admin" },
-                new Role { Name = "User" }
+                new Role { Name = "Admin", AccessLevel = -1 },
+                new Role { Name = "User", AccessLevel = 0 }
             };
             using IServiceScope scope = app.ApplicationServices.CreateScope();
             using RoleManager<Role> roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
@@ -31,7 +31,26 @@ namespace ClayBackend.Extensions
                     roleManager.CreateAsync(role).Wait();
                 }
             }
-        }   
+        }
+
+
+        public static void SeedAdminUser(this IApplicationBuilder app)
+        {
+            using IServiceScope scope = app.ApplicationServices.CreateScope();
+            using UserManager<User> userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+            User admin = userManager.FindByEmailAsync("admin@clay.com").Result;
+            if (admin == null)
+            {
+                admin = new User
+                {
+                    UserName = "admin@clay.com",
+                    Email = "admin@clay.com",
+                    EmailConfirmed = true
+                };
+                userManager.CreateAsync(admin, "Admin123!").Wait();
+                userManager.AddToRoleAsync(admin, "Admin").Wait();
+            }
+        }
 
 
     }

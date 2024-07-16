@@ -3,6 +3,7 @@ using System;
 using ClayBackend.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ClayBackend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240715223850_accesslevel")]
+    partial class accesslevel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,30 +25,6 @@ namespace ClayBackend.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("ClayBackend.Models.Door", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("AccessLevel")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("IsOpen")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid>("LockId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Doors", "clay");
-                });
 
             modelBuilder.Entity("ClayBackend.Models.Role", b =>
                 {
@@ -82,9 +61,6 @@ namespace ClayBackend.Migrations
                         .HasColumnType("text");
 
                     b.Property<int>("AccessFailedCount")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("AccessLevel")
                         .HasColumnType("integer");
 
                     b.Property<string>("ConcurrencyStamp")

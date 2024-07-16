@@ -7,6 +7,7 @@ namespace ClayBackend.Context
 {
     public class AppDbContext : IdentityDbContext<User, Role, string>
     {
+        public DbSet<Door> Doors { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
