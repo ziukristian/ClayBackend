@@ -1,11 +1,11 @@
 ﻿using ClayBackend.Context;
-using ClayBackend.Models;
+using ClayBackend.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace ClayBackend.Extensions
+namespace ClayBackend.Services
 {
-    public static class MigrationExtensions
+    public static class AppExtensions
     {
         public static void ApplyMigrations(this IApplicationBuilder app)
         {
@@ -18,8 +18,8 @@ namespace ClayBackend.Extensions
         {
             var roles = new List<Role>
             {
-                new Role { Name = "Admin", AccessLevel = -1 },
-                new Role { Name = "User", AccessLevel = 0 }
+                new Role { Name = "Admin" },
+                new Role { Name = "User"}
             };
             using IServiceScope scope = app.ApplicationServices.CreateScope();
             using RoleManager<Role> roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();

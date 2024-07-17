@@ -1,12 +1,15 @@
 using ClayBackend.Context;
-using ClayBackend.Extensions;
 using ClayBackend.Models;
-using ClayBackend.Repository;
+using ClayBackend.Services;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Server.IISIntegration;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
+using ClayBackend.Entities;
+using ClayBackend.Profiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +35,12 @@ builder.Services.AddIdentityCore<User>()
     .AddRoles<Role>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddApiEndpoints();
+
+builder.Services.AddApiVersioning();
+
+var ass = AppDomain.CurrentDomain.GetAssemblies();
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
