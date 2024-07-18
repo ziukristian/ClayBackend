@@ -1,7 +1,4 @@
 ﻿using AutoMapper;
-using ClayBackend.Entities;
-using ClayBackend.Models;
-using ClayBackend.Services;
 
 namespace ClayBackend.Profiles
 {
@@ -9,7 +6,10 @@ namespace ClayBackend.Profiles
     {
         public DoorProfile()
         {
-            CreateMap<Entities.Door, Models.DoorReadDTO>();
+            CreateMap<Entities.Door, Models.DoorReadShallowDTO>();
+            CreateMap<Entities.Door, Models.DoorReadDetailsDTO>();
+            CreateMap<Models.DoorUpdateDTO, Entities.Door>();
+            CreateMap<Models.DoorInsertDTO, Entities.Door>();
         }
     }
 }

@@ -10,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using ClayBackend.Entities;
 using ClayBackend.Profiles;
+using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.AspNetCore.Mvc;
+using ClayBackend.Services.Repos;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -63,6 +66,7 @@ if (app.Environment.IsDevelopment())
 // Custom Seeding extension methods
 app.SeedRoles();
 app.SeedAdminUser();
+app.SeedStandardUser();
 
 app.UseHttpsRedirection();
 

@@ -2,7 +2,7 @@
 
 namespace ClayBackend.Entities
 {
-    public class Role : IdentityRole
+    public class Role : IdentityRole<Guid>
     {
     }
 }

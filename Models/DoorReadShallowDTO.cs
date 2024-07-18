@@ -1,6 +1,6 @@
 ﻿namespace ClayBackend.Models
 {
-    public class DoorReadDTO
+    public class DoorReadShallowDTO
     {
         public Guid Id { get; set; }
         public string Description { get; set; }

@@ -10,6 +10,7 @@ namespace ClayBackend.Entities
         public Guid Id { get; set; }
         [Required]
         public required string Name { get; set; }
-        public List<User> Users { get; set; } = [];
+        public IEnumerable<GroupMember> Members { get; set; } = [];
+        public IEnumerable<GroupPermission> Permissions { get; set; } = [];
     }
 }

@@ -8,12 +8,13 @@ namespace ClayBackend.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
-        public Guid LockId { get; set; }
+        public Guid? LockId { get; set; } = null;
         [Required]
         [MaxLength(200)]
         public required string Description { get; set; }
         public bool IsOpen { get; set; } = false;
-        public List<DoorPermission> Permissions { get; set; } = [];
-
+        public IEnumerable<UserPermission> UserPermissions { get; set; } = [];
+        public IEnumerable<GroupPermission> GroupPermission { get; set; } = [];
+        public IEnumerable<ActivityLog> ActivityLogs { get; set; } = [];
     }
 }

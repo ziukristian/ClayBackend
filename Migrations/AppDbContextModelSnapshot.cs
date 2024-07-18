@@ -23,7 +23,36 @@ namespace ClayBackend.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("ClayBackend.Models.Door", b =>
+            modelBuilder.Entity("ClayBackend.Entities.ActivityLog", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("DoorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("TimeStamp")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("DoorId", "TimeStamp")
+                        .IsDescending();
+
+                    b.ToTable("ActivityLogs", "clay");
+                });
+
+            modelBuilder.Entity("ClayBackend.Entities.Door", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -37,59 +66,68 @@ namespace ClayBackend.Migrations
                     b.Property<bool>("IsOpen")
                         .HasColumnType("boolean");
 
-                    b.Property<Guid>("LockId")
+                    b.Property<Guid?>("LockId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Description");
+
                     b.ToTable("Doors", "clay");
                 });
 
-            modelBuilder.Entity("ClayBackend.Models.DoorActivityLog", b =>
+            modelBuilder.Entity("ClayBackend.Entities.Group", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<int>("ActionCode")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("DoorId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTimeOffset>("TimeStamp")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("UserId")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DoorId");
+                    b.HasIndex("Name");
+
+                    b.ToTable("Groups", "clay");
+                });
+
+            modelBuilder.Entity("ClayBackend.Entities.GroupMember", b =>
+                {
+                    b.Property<Guid>("GroupId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("GroupId", "UserId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("DoorActivityLogs", "clay");
+                    b.ToTable("GroupMembers", "clay");
                 });
 
-            modelBuilder.Entity("ClayBackend.Models.DoorPermission", b =>
+            modelBuilder.Entity("ClayBackend.Entities.GroupPermission", b =>
                 {
                     b.Property<Guid>("DoorId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("AuthorizedEntityId")
+                    b.Property<Guid>("GroupId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("DoorId", "AuthorizedEntityId");
+                    b.HasKey("DoorId", "GroupId");
 
-                    b.ToTable("DoorPermissions", "clay");
+                    b.HasIndex("GroupId");
+
+                    b.ToTable("GroupPermission", "clay");
                 });
 
-            modelBuilder.Entity("ClayBackend.Models.Role", b =>
+            modelBuilder.Entity("ClayBackend.Entities.Role", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -112,10 +150,11 @@ namespace ClayBackend.Migrations
                     b.ToTable("AspNetRoles", "clay");
                 });
 
-            modelBuilder.Entity("ClayBackend.Models.User", b =>
+            modelBuilder.Entity("ClayBackend.Entities.User", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("integer");
@@ -173,10 +212,27 @@ namespace ClayBackend.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
+                    b.HasIndex("UserName");
+
                     b.ToTable("AspNetUsers", "clay");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("ClayBackend.Entities.UserPermission", b =>
+                {
+                    b.Property<Guid>("DoorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("DoorId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Permissions", "clay");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -190,9 +246,8 @@ namespace ClayBackend.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("text");
 
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -201,7 +256,7 @@ namespace ClayBackend.Migrations
                     b.ToTable("AspNetRoleClaims", "clay");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -215,9 +270,8 @@ namespace ClayBackend.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("text");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -226,7 +280,7 @@ namespace ClayBackend.Migrations
                     b.ToTable("AspNetUserClaims", "clay");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasColumnType("text");
@@ -237,9 +291,8 @@ namespace ClayBackend.Migrations
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("text");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -248,13 +301,13 @@ namespace ClayBackend.Migrations
                     b.ToTable("AspNetUserLogins", "clay");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
-                    b.Property<string>("RoleId")
-                        .HasColumnType("text");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -263,10 +316,10 @@ namespace ClayBackend.Migrations
                     b.ToTable("AspNetUserRoles", "clay");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("LoginProvider")
                         .HasColumnType("text");
@@ -282,15 +335,15 @@ namespace ClayBackend.Migrations
                     b.ToTable("AspNetUserTokens", "clay");
                 });
 
-            modelBuilder.Entity("ClayBackend.Models.DoorActivityLog", b =>
+            modelBuilder.Entity("ClayBackend.Entities.ActivityLog", b =>
                 {
-                    b.HasOne("ClayBackend.Models.Door", "Door")
-                        .WithMany()
+                    b.HasOne("ClayBackend.Entities.Door", "Door")
+                        .WithMany("ActivityLogs")
                         .HasForeignKey("DoorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ClayBackend.Models.User", "User")
+                    b.HasOne("ClayBackend.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -301,68 +354,134 @@ namespace ClayBackend.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ClayBackend.Models.DoorPermission", b =>
+            modelBuilder.Entity("ClayBackend.Entities.GroupMember", b =>
                 {
-                    b.HasOne("ClayBackend.Models.Door", null)
-                        .WithMany("Permissions")
+                    b.HasOne("ClayBackend.Entities.Group", "Group")
+                        .WithMany("Members")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ClayBackend.Entities.User", "User")
+                        .WithMany("GroupMemberships")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ClayBackend.Entities.GroupPermission", b =>
+                {
+                    b.HasOne("ClayBackend.Entities.Door", "Door")
+                        .WithMany("GroupPermission")
                         .HasForeignKey("DoorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("ClayBackend.Entities.Group", "Group")
+                        .WithMany("Permissions")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Door");
+
+                    b.Navigation("Group");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("ClayBackend.Entities.UserPermission", b =>
                 {
-                    b.HasOne("ClayBackend.Models.Role", null)
+                    b.HasOne("ClayBackend.Entities.Door", "Door")
+                        .WithMany("UserPermissions")
+                        .HasForeignKey("DoorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ClayBackend.Entities.User", "User")
+                        .WithMany("Permissions")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Door");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
+                {
+                    b.HasOne("ClayBackend.Entities.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("ClayBackend.Models.User", null)
+                    b.HasOne("ClayBackend.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("ClayBackend.Models.User", null)
+                    b.HasOne("ClayBackend.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.HasOne("ClayBackend.Models.Role", null)
+                    b.HasOne("ClayBackend.Entities.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ClayBackend.Models.User", null)
+                    b.HasOne("ClayBackend.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("ClayBackend.Models.User", null)
+                    b.HasOne("ClayBackend.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ClayBackend.Models.Door", b =>
+            modelBuilder.Entity("ClayBackend.Entities.Door", b =>
                 {
+                    b.Navigation("ActivityLogs");
+
+                    b.Navigation("GroupPermission");
+
+                    b.Navigation("UserPermissions");
+                });
+
+            modelBuilder.Entity("ClayBackend.Entities.Group", b =>
+                {
+                    b.Navigation("Members");
+
+                    b.Navigation("Permissions");
+                });
+
+            modelBuilder.Entity("ClayBackend.Entities.User", b =>
+                {
+                    b.Navigation("GroupMemberships");
+
                     b.Navigation("Permissions");
                 });
 #pragma warning restore 612, 618
