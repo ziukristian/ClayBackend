@@ -1,5 +1,4 @@
 ﻿using ClayBackend.Models.Doors;
-using ClayBackend.Models.UserPermissions;
 using ClayBackend.Models.Users;
 
 namespace ClayBackend.Models.Groups

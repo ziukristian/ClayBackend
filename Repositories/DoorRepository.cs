@@ -1,13 +1,14 @@
 ﻿using ClayBackend.Context;
 using ClayBackend.Entities;
 using ClayBackend.Models;
+using ClayBackend.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
 using Group = ClayBackend.Entities.Group;
 
-namespace ClayBackend.Services.Repos
+namespace ClayBackend.Repos
 {
     public class DoorRepository(AppDbContext context, IActivityLoggerService activityLoggerService) : IDoorRepository
     {
@@ -28,6 +29,7 @@ namespace ClayBackend.Services.Repos
             var paginationData = new PaginationData(itemCount, pageSize, pageNumber);
 
             var collectionToReturn = await collection
+                .OrderBy(c => c.Description)
                 .Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
                 .ToListAsync();
@@ -43,7 +45,7 @@ namespace ClayBackend.Services.Repos
             return newDoor;
         }
 
-        public async Task<Door> GetDoorAsync(Guid id)
+        public async Task<Door?> GetDoorByIdAsync(Guid id)
         {
             return await _context.Doors.FirstOrDefaultAsync(d => d.Id == id);
         }
@@ -79,7 +81,7 @@ namespace ClayBackend.Services.Repos
             // check if any UserPermissions have UserId equal to userid and Id equal to doorid
             bool permittedEntry = _context.UserPermissions.Any(up => up.UserId == userid && up.DoorId == id);
 
-            if(!permittedEntry)
+            if (!permittedEntry)
             {
                 permittedEntry = await _context.GroupMemberships
                     .Where(gm => gm.UserId == userid)

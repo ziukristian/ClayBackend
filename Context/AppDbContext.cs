@@ -76,6 +76,10 @@ namespace ClayBackend.Context
                 .HasForeignKey(gm => gm.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            builder.Entity<User>()
+                .HasMany<ActivityLog>(u => u.ActivityLogs)
+                .WithOne(a => a.User)
+                .HasForeignKey(a => a.UserId);
 
             builder.Entity<Door>()
                 .HasMany<UserPermission>(d => d.UserPermissions)

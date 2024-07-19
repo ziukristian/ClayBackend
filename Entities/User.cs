@@ -9,5 +9,6 @@ namespace ClayBackend.Entities
         public IList<GroupMembership> GroupMemberships { get; set; } = [];
         public IList<Group> Groups { get; set; } = [];
         public IList<UserPermission> Permissions { get; set; } = [];
+        public IList<ActivityLog> ActivityLogs { get; set; } = [];
     }
 }

@@ -1,7 +1,6 @@
-﻿using ClayBackend.Entities;
+﻿using ClayBackend.Models.ActivityLogs;
 using ClayBackend.Models.Doors;
 using ClayBackend.Models.Groups;
-using ClayBackend.Models.UserPermissions;
 
 namespace ClayBackend.Models.Users
 {
@@ -11,6 +10,7 @@ namespace ClayBackend.Models.Users
         public string? UserName { get; set; }
         public IList<GroupReadShallowDTO> GroupMemberships { get; set; } = [];
         public IList<DoorReadShallowDTO> PermittedDoors { get; set; } = [];
+        public IList<ActivityLogReadDTO> ActivityLogs { get; set; } = [];
 
     }
 }

@@ -3,6 +3,7 @@ using System;
 using ClayBackend.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ClayBackend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240719004158_changedindex")]
+    partial class changedindex
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,8 +49,7 @@ namespace ClayBackend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.HasIndex("DoorId", "TimeStamp")
-                        .IsDescending(false, true);
+                    b.HasIndex("DoorId", "TimeStamp");
 
                     b.ToTable("ActivityLogs", "clay");
                 });
@@ -347,7 +349,7 @@ namespace ClayBackend.Migrations
                         .IsRequired();
 
                     b.HasOne("ClayBackend.Entities.User", "User")
-                        .WithMany("ActivityLogs")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -483,8 +485,6 @@ namespace ClayBackend.Migrations
 
             modelBuilder.Entity("ClayBackend.Entities.User", b =>
                 {
-                    b.Navigation("ActivityLogs");
-
                     b.Navigation("GroupMemberships");
 
                     b.Navigation("Permissions");

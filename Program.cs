@@ -3,50 +3,48 @@ using ClayBackend.Models;
 using ClayBackend.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.BearerToken;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Server.IISIntegration;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 using ClayBackend.Entities;
 using ClayBackend.Profiles;
 using Microsoft.AspNetCore.Mvc.Versioning;
-using Microsoft.AspNetCore.Mvc;
-using ClayBackend.Services.Repos;
+using Serilog;
+using Microsoft.AspNetCore.Diagnostics;
+using ClayBackend.Repos;
+using ClayBackend.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Serilog
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
+builder.Host.UseSerilog();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-// Configure swagger to use bearer token
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Authentication dependancies
-// I went for bearer for the locks, jwt would have been better but would have taken me too long to implement
+// Authentication dependencies
 builder.Services
     .AddAuthentication(options => {
-        //options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
-        //options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
         options.DefaultAuthenticateScheme = IdentityConstants.BearerScheme;
         options.DefaultChallengeScheme = IdentityConstants.BearerScheme;
     })
-    //.AddCookie(IdentityConstants.ApplicationScheme)
     .AddBearerToken(IdentityConstants.BearerScheme);
 builder.Services.AddAuthorization();
 
-// Identity dependancies
+// Identity dependencies
 builder.Services.AddIdentityCore<User>()
     .AddRoles<Role>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddApiEndpoints();
 
 builder.Services.AddApiVersioning();
-
-var ass = AppDomain.CurrentDomain.GetAssemblies();
-
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -54,11 +52,16 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Service injection
 builder.Services.AddScoped<IDoorRepository, DoorRepository>();
+builder.Services.AddScoped<IActivityLoggerRepository, ActivityLoggerRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IGroupRepository, GroupRepository>();
 builder.Services.AddScoped<IActivityLoggerService, ActivityLoggerService>();
+
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseSerilogRequestLogging();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

@@ -1,14 +1,15 @@
 ﻿using ClayBackend.Entities;
 using ClayBackend.Models;
+using ClayBackend.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ClayBackend.Services.Repos
+namespace ClayBackend.Repos
 {
     public interface IDoorRepository
     {
         Task<IList<Door>> GetDoorsAsync();
         Task<(IList<Door>, PaginationData)> GetDoorsAsync(int pageNumber, int pageSize);
-        Task<Door> GetDoorAsync(Guid id);
+        Task<Door?> GetDoorByIdAsync(Guid id);
         Task<Door> AddDoorAsync(Door newDoor);
         Task<bool> DoorExistsAsync(Guid id);
         Task<Door> UpdateDoorAsync(Door door);

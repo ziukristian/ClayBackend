@@ -10,23 +10,19 @@ namespace ClayBackend.Profiles
     {
         public UserProfile()
         {
-            // User to UserReadShallowDTO
             CreateMap<User, UserReadShallowDTO>();
 
-            // Mapping from GroupMembership to GroupReadShallowDTO
             CreateMap<GroupMembership, GroupReadShallowDTO>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Group.Id))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Group.Name));
 
-            // User to UserReadDetailsDTO
             CreateMap<User, UserReadDetailsDTO>()
                 .ForMember(dest => dest.GroupMemberships, opt => opt.MapFrom(src => src.GroupMemberships))
-                .ForMember(dest => dest.PermittedDoors, opt => opt.MapFrom(src => src.Permissions));
+                .ForMember(dest => dest.PermittedDoors, opt => opt.MapFrom(src => src.Permissions))
+                .ForMember(dest => dest.ActivityLogs, opt => opt.MapFrom(src => src.ActivityLogs));
 
-            // UserPermission to UserPermissionReadDTO
             CreateMap<UserPermission, UserPermissionReadDTO>();
 
-            // UserPermission to DoorReadShallowDTO
             CreateMap<UserPermission, DoorReadShallowDTO>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.DoorId))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Door.Description))
