@@ -66,10 +66,10 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-
-    // Custom auto migrates on startup
-    app.ApplyMigrations();
 }
+
+// Custom auto migrates on startup
+app.ApplyMigrations();
 
 // Custom Seeding extension methods
 app.SeedRoles();
