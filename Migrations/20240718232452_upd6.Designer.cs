@@ -3,6 +3,7 @@ using System;
 using ClayBackend.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ClayBackend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240718232452_upd6")]
+    partial class upd6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -95,15 +98,15 @@ namespace ClayBackend.Migrations
 
             modelBuilder.Entity("ClayBackend.Entities.GroupMembership", b =>
                 {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
                     b.Property<Guid>("GroupId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("UserId", "GroupId");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
-                    b.HasIndex("GroupId");
+                    b.HasKey("GroupId", "UserId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("GroupMemberships", "clay");
                 });
@@ -230,6 +233,21 @@ namespace ClayBackend.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserPermissions", "clay");
+                });
+
+            modelBuilder.Entity("GroupUser", b =>
+                {
+                    b.Property<Guid>("GroupsId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("MembersId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("GroupsId", "MembersId");
+
+                    b.HasIndex("MembersId");
+
+                    b.ToTable("GroupUser", "clay");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -409,6 +427,21 @@ namespace ClayBackend.Migrations
                     b.Navigation("Door");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("GroupUser", b =>
+                {
+                    b.HasOne("ClayBackend.Entities.Group", null)
+                        .WithMany()
+                        .HasForeignKey("GroupsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ClayBackend.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("MembersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

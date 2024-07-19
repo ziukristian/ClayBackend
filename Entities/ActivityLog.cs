@@ -5,21 +5,19 @@ namespace ClayBackend.Entities
 {
     public class ActivityLog
     {
-        private DateTimeOffset timeStamp = DateTimeOffset.Now;
-
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
         [Required]
         public Guid DoorId { get; set; }
-        public required Door Door { get; set; }
-        
+        public Door Door { get; set; } = null!;
+
         [Required]
         public Guid UserId { get; set; }
-        public required User User { get; set; }
+        public User User { get; set; } = null!;
 
-        public required DateTimeOffset TimeStamp { get => timeStamp; set => timeStamp = value; }
+        public DateTime TimeStamp { get ; set; } =  DateTime.Now.ToUniversalTime();
         public required string Action { get; set; }
     }
 }

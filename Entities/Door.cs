@@ -13,8 +13,8 @@ namespace ClayBackend.Entities
         [MaxLength(200)]
         public required string Description { get; set; }
         public bool IsOpen { get; set; } = false;
-        public IEnumerable<UserPermission> UserPermissions { get; set; } = [];
-        public IEnumerable<GroupPermission> GroupPermission { get; set; } = [];
-        public IEnumerable<ActivityLog> ActivityLogs { get; set; } = [];
+        public IList<UserPermission> UserPermissions { get; set; } = [];
+        public IList<GroupPermission> GroupPermission { get; set; } = [];
+        public IList<ActivityLog> ActivityLogs { get; set; } = [];
     }
 }

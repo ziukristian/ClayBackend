@@ -3,6 +3,7 @@ using System;
 using ClayBackend.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ClayBackend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240718223946_upd4")]
+    partial class upd4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,7 +50,7 @@ namespace ClayBackend.Migrations
                     b.HasIndex("UserId");
 
                     b.HasIndex("DoorId", "TimeStamp")
-                        .IsDescending(false, true);
+                        .IsDescending();
 
                     b.ToTable("ActivityLogs", "clay");
                 });
@@ -93,19 +96,19 @@ namespace ClayBackend.Migrations
                     b.ToTable("Groups", "clay");
                 });
 
-            modelBuilder.Entity("ClayBackend.Entities.GroupMembership", b =>
+            modelBuilder.Entity("ClayBackend.Entities.GroupMember", b =>
                 {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
                     b.Property<Guid>("GroupId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("UserId", "GroupId");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
-                    b.HasIndex("GroupId");
+                    b.HasKey("GroupId", "UserId");
 
-                    b.ToTable("GroupMemberships", "clay");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("GroupMembers", "clay");
                 });
 
             modelBuilder.Entity("ClayBackend.Entities.GroupPermission", b =>
@@ -354,10 +357,10 @@ namespace ClayBackend.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ClayBackend.Entities.GroupMembership", b =>
+            modelBuilder.Entity("ClayBackend.Entities.GroupMember", b =>
                 {
                     b.HasOne("ClayBackend.Entities.Group", "Group")
-                        .WithMany("Memberships")
+                        .WithMany("Members")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -473,7 +476,7 @@ namespace ClayBackend.Migrations
 
             modelBuilder.Entity("ClayBackend.Entities.Group", b =>
                 {
-                    b.Navigation("Memberships");
+                    b.Navigation("Members");
 
                     b.Navigation("Permissions");
                 });

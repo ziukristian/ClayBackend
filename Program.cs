@@ -20,16 +20,20 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Configure swagger to use bearer token
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Authentication dependancies
+// I went for bearer for the locks, jwt would have been better but would have taken me too long to implement
 builder.Services
     .AddAuthentication(options => {
-        options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
-        options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+        //options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
+        //options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+        options.DefaultAuthenticateScheme = IdentityConstants.BearerScheme;
+        options.DefaultChallengeScheme = IdentityConstants.BearerScheme;
     })
-    .AddCookie(IdentityConstants.ApplicationScheme)
+    //.AddCookie(IdentityConstants.ApplicationScheme)
     .AddBearerToken(IdentityConstants.BearerScheme);
 builder.Services.AddAuthorization();
 
@@ -48,8 +52,9 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
 
-// Repository dependancies
+// Service injection
 builder.Services.AddScoped<IDoorRepository, DoorRepository>();
+builder.Services.AddScoped<IActivityLoggerService, ActivityLoggerService>();
 
 var app = builder.Build();
 

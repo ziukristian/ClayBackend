@@ -6,7 +6,8 @@ namespace ClayBackend.Entities
 {
     public class User: IdentityUser<Guid>
     {
-        public IEnumerable<GroupMember> GroupMemberships { get; set; } = [];
-        public IEnumerable<UserPermission> Permissions { get; set; } = [];
+        public IList<GroupMembership> GroupMemberships { get; set; } = [];
+        public IList<Group> Groups { get; set; } = [];
+        public IList<UserPermission> Permissions { get; set; } = [];
     }
 }

@@ -13,7 +13,7 @@ namespace ClayBackend.Context
         public DbSet<UserPermission> UserPermissions { get; set; }
         public DbSet<GroupPermission> GroupPermissions { get; set; }
         public DbSet<Group> Groups { get; set; }
-        public DbSet<GroupMember> GroupMembers { get; set; }
+        public DbSet<GroupMembership> GroupMemberships { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -26,15 +26,33 @@ namespace ClayBackend.Context
 
             builder.Entity<UserPermission>().HasKey(m => new { m.DoorId, m.UserId });
             builder.Entity<GroupPermission>().HasKey(m => new { m.DoorId, m.GroupId });
-            builder.Entity<GroupMember>().HasKey(m => new { m.GroupId, m.UserId });
+            builder.Entity<GroupMembership>().HasKey(m => new { m.GroupId, m.UserId });
 
-            builder.Entity<ActivityLog>().HasIndex(a => new { a.DoorId, a.TimeStamp }).IsDescending();
+            builder.Entity<ActivityLog>().HasIndex(a => new { a.DoorId, a.TimeStamp }).IsDescending(false, true);
             builder.Entity<Door>().HasIndex(d => d.Description);
             builder.Entity<Group>().HasIndex(g => g.Name);
             builder.Entity<User>().HasIndex(u => u.UserName);
 
+            builder.Entity<User>()
+            .HasMany(u => u.Groups)
+            .WithMany(g => g.Members)
+            .UsingEntity<GroupMembership>(
+                j => j
+                    .HasOne(gm => gm.Group)
+                    .WithMany(g => g.Memberships)
+                    .HasForeignKey(gm => gm.GroupId),
+                j => j
+                    .HasOne(gm => gm.User)
+                    .WithMany(u => u.GroupMemberships)
+                    .HasForeignKey(gm => gm.UserId),
+                j =>
+                {
+                    j.HasKey(t => new { t.UserId, t.GroupId });
+                }
+            );
+
             builder.Entity<Group>()
-                .HasMany<GroupMember>(g => g.Members)
+                .HasMany<GroupMembership>(g => g.Memberships)
                 .WithOne(gm => gm.Group)
                 .HasForeignKey(gm => gm.GroupId)
                 .OnDelete(DeleteBehavior.Cascade);
@@ -45,8 +63,9 @@ namespace ClayBackend.Context
                 .HasForeignKey(gm => gm.GroupId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+
             builder.Entity<User>()
-                .HasMany<GroupMember>(u => u.GroupMemberships)
+                .HasMany<GroupMembership>(u => u.GroupMemberships)
                 .WithOne(gm => gm.User)
                 .HasForeignKey(gm => gm.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
@@ -56,6 +75,7 @@ namespace ClayBackend.Context
                 .WithOne(gm => gm.User)
                 .HasForeignKey(gm => gm.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
 
             builder.Entity<Door>()
                 .HasMany<UserPermission>(d => d.UserPermissions)

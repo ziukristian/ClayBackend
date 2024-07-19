@@ -3,13 +3,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ClayBackend.Entities
 {
-    public class GroupMember
+    public class GroupMembership
     {
         [Required]
         public Guid GroupId { get; set; }
-        public required Group Group { get; set; }
+        public Group Group { get; set; } = null!;
         [Required]
         public Guid UserId { get; set; }
-        public required User User { get; set; }
+        public User User { get; set; } = null!;
     }
 }

@@ -6,16 +6,18 @@ namespace ClayBackend.Services.Repos
 {
     public interface IDoorRepository
     {
-        Task<IEnumerable<Door>> GetDoorsAsync();
-        Task<(IEnumerable<Door>, PaginationData)> GetDoorsAsync(int pageNumber, int pageSize);
+        Task<IList<Door>> GetDoorsAsync();
+        Task<(IList<Door>, PaginationData)> GetDoorsAsync(int pageNumber, int pageSize);
         Task<Door> GetDoorAsync(Guid id);
         Task<Door> AddDoorAsync(Door newDoor);
         Task<bool> DoorExistsAsync(Guid id);
         Task<Door> UpdateDoorAsync(Door door);
-        void RemoveDoorAsync(Guid id);
-        Task<IActionResult> OpenDoorAsync(Guid id, Guid userid);
-        Task<IActionResult> CloseDoorAsync(Guid id, Guid userid);
-        Task<Group> AddGroupPermissionToDoor(Guid id, Guid groupId);
+        Task RemoveDoorByIdAsync(Guid id);
+        Task<bool> OpenDoorAsync(Guid id, Guid userid);
+        Task<bool> CloseDoorAsync(Guid id, Guid userid);
+        Task<Group> AddGroupPermissionToDoorAsync(Guid id, Guid groupId);
         Task<User> AddUserPermissionToDoor(Guid id, Guid userId);
+        Task RemoveGroupPermissionFromDoorAsync(Guid id, Guid groupId);
+        Task RemoveUserPermissionFromDoorAsync(Guid id, Guid userId);
     }
 }
