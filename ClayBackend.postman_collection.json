@@ -1,0 +1,843 @@
+{
+	"info": {
+		"_postman_id": "ee2023ea-2777-4db3-b884-1350bc70e12b",
+		"name": "ClayBackend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24283063"
+	},
+	"item": [
+		{
+			"name": "Doors",
+			"item": [
+				{
+					"name": "GetAllDoors",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Stores the doorId in an environment or global variable\r",
+									"var doorId = pm.response.json()[0].id;\r",
+									"pm.collectionVariables.set(\"doorId\", doorId);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/v{{apiVersion}}/doors?pageNumber=1&pageSize=10",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v{{apiVersion}}",
+								"doors"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetDoorById",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/v{{apiVersion}}/doors/{{doorId}}",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v{{apiVersion}}",
+								"doors",
+								"{{doorId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddDoor",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"description\" : \"Storage Room Door\",  \r\n  \"lockId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/v{{apiVersion}}/doors",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v{{apiVersion}}",
+								"doors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateDoor",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"description\": \"Updated by Postman 2\",\r\n  \"lockId\": \"3fa85f64-5717-4562-b3fc-2c963f66a667\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/v{{apiVersion}}/doors/{{doorId}}",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v{{apiVersion}}",
+								"doors",
+								"{{doorId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteDoor",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/v{{apiVersion}}/doors/{{doorId}}",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v{{apiVersion}}",
+								"doors",
+								"{{doorId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RevokeAccessToGroup",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/v{{apiVersion}}/doors/{{doorId}}/permissions/groups?groupId=3fa85f64-5717-4562-b3fc-2c963f66afa6",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v{{apiVersion}}",
+								"doors",
+								"{{doorId}}",
+								"permissions",
+								"groups"
+							],
+							"query": [
+								{
+									"key": "groupId",
+									"value": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "OpenDoor",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/v{{apiVersion}}/doors/{{doorId}}/open",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v{{apiVersion}}",
+								"doors",
+								"{{doorId}}",
+								"open"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CloseDoor",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/v{{apiVersion}}/doors/{{doorId}}/close",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v{{apiVersion}}",
+								"doors",
+								"{{doorId}}",
+								"close"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AllowUserAccess",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/v{{apiVersion}}/doors/{{doorId}}/permissions/users?userId=b0a0127c-9690-41ed-b8d7-2c1a17df854d",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v{{apiVersion}}",
+								"doors",
+								"{{doorId}}",
+								"permissions",
+								"users"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "b0a0127c-9690-41ed-b8d7-2c1a17df854d"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RevokeUserAccess",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/v{{apiVersion}}/doors/{{doorId}}/permissions/users?userId=881426fc-e837-42ae-a38a-38741b801bb6",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v{{apiVersion}}",
+								"doors",
+								"{{doorId}}",
+								"permissions",
+								"users"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "881426fc-e837-42ae-a38a-38741b801bb6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AllowGroupAccess",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/v{{apiVersion}}/doors/{{doorId}}/permissions/groups?groupId=0e50e282-48ab-4426-bfe4-63dac56f0186",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v{{apiVersion}}",
+								"doors",
+								"{{doorId}}",
+								"permissions",
+								"groups"
+							],
+							"query": [
+								{
+									"key": "groupId",
+									"value": "0e50e282-48ab-4426-bfe4-63dac56f0186"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Groups",
+			"item": [
+				{
+					"name": "GetGroups",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Stores the doorId in an environment or global variable\r",
+									"var groupId = pm.response.json()[0].id;\r",
+									"pm.collectionVariables.set(\"groupId\", groupId);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/v{{apiVersion}}/groups?pageNumber=1&pageSize=10",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v{{apiVersion}}",
+								"groups"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetGroupById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/v{{apiVersion}}/groups/{{groupId}}",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v{{apiVersion}}",
+								"groups",
+								"{{groupId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddGroup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Managers\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/v{{apiVersion}}/groups",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v{{apiVersion}}",
+								"groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddUserToGroup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/v{{apiVersion}}/groups/{{groupId}}/adduser?userId=6185dc98-8630-4690-9f8b-12ab5d18219d",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v{{apiVersion}}",
+								"groups",
+								"{{groupId}}",
+								"adduser"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "6185dc98-8630-4690-9f8b-12ab5d18219d"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateGroup",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Updated from Postman\",\r\n  \"canMonitor\" : true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{apiUrl}}/api/v{{apiVersion}}/groups/{{groupId}}",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v{{apiVersion}}",
+								"groups",
+								"{{groupId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteGroup",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/v{{apiVersion}}/groups/{{groupId}}",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v{{apiVersion}}",
+								"groups",
+								"{{groupId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RemoveUserFromGroup",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/v{{apiVersion}}/groups/{{groupId}}/removeuser?userId=881426fc-e837-42ae-a38a-38741b801bb6",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v{{apiVersion}}",
+								"groups",
+								"{{groupId}}",
+								"removeuser"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "881426fc-e837-42ae-a38a-38741b801bb6"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "GetAllUsers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var userId = pm.response.json()[0].id;\r",
+									"pm.collectionVariables.set(\"userId\", userId);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/v{{apiVersion}}/users?pageNumber=1&pageSize=10",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v{{apiVersion}}",
+								"users"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetUserById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/v{{apiVersion}}/users/6185dc98-8630-4690-9f8b-12ab5d18219d",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v{{apiVersion}}",
+								"users",
+								"6185dc98-8630-4690-9f8b-12ab5d18219d"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ActivityLogs",
+			"item": [
+				{
+					"name": "GetActivityLogs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/api/v{{apiVersion}}/activitylogs?pageNumber=1&pageSize=10",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"api",
+								"v{{apiVersion}}",
+								"activitylogs"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login ADMIN",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Save token\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    console.log(jsonData)\r",
+							"    pm.collectionVariables.set(\"token\", jsonData.accessToken);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"admin@clay.com\",\r\n  \"password\": \"Admin123!\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{apiUrl}}/login?useCookies={{usecookies}}&useSessionCookies={{usecookies}}",
+					"host": [
+						"{{apiUrl}}"
+					],
+					"path": [
+						"login"
+					],
+					"query": [
+						{
+							"key": "useCookies",
+							"value": "{{usecookies}}"
+						},
+						{
+							"key": "useSessionCookies",
+							"value": "{{usecookies}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login USER",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Save token\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.collectionVariables.set(\"token\", jsonData.accessToken);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"user@clay.com\",\r\n  \"password\": \"User123!\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{apiUrl}}/login?useCookies={{usecookies}}&useSessionCookies={{usecookies}}",
+					"host": [
+						"{{apiUrl}}"
+					],
+					"path": [
+						"login"
+					],
+					"query": [
+						{
+							"key": "useCookies",
+							"value": "{{usecookies}}"
+						},
+						{
+							"key": "useSessionCookies",
+							"value": "{{usecookies}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Save token\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    console.log(jsonData)\r",
+							"    pm.collectionVariables.set(\"token\", jsonData.accessToken);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"justadded@clay.com\",\r\n  \"password\": \"Added123!\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{apiUrl}}/register",
+					"host": [
+						"{{apiUrl}}"
+					],
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"pm.request.headers.add({\r",
+					"    key: \"Authorization\",\r",
+					"    value: \"Bearer \" + pm.environment.get(\"token\")\r",
+					"});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "apiUrl",
+			"value": "https://localhost:44333",
+			"type": "string"
+		},
+		{
+			"key": "apiVersion",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "doorId",
+			"value": ""
+		},
+		{
+			"key": "usecookies",
+			"value": "true",
+			"type": "string"
+		},
+		{
+			"key": "groupId",
+			"value": ""
+		},
+		{
+			"key": "userId",
+			"value": ""
+		}
+	]
+}
