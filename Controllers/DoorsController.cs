@@ -4,12 +4,14 @@ using ClayBackend.Models.Doors;
 using ClayBackend.Models.Groups;
 using ClayBackend.Models.Users;
 using ClayBackend.Repos;
+using ClayBackend.Repositories;
 using ClayBackend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace ClayBackend.Controllers
 {
@@ -17,12 +19,14 @@ namespace ClayBackend.Controllers
     [Authorize]
     [Route("api/v{version:apiVersion}/doors")]
     [ApiVersion("1.0")]
-    public class DoorsController(IDoorRepository doorRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor, IActivityLoggerService activityLoggerService) : ControllerBase
+    public class DoorsController(IDoorRepository doorRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor, IActivityLoggerService activityLoggerService, IUserRepository userRepository, IGroupRepository groupRepository) : ControllerBase
     {
         private readonly IDoorRepository _doorRepository = doorRepository;
         private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
         private readonly IMapper _mapper = mapper;
         private readonly IActivityLoggerService _activityLoggerService = activityLoggerService;
+        private readonly IUserRepository _userRepository = userRepository;
+        private readonly IGroupRepository _groupRepository = groupRepository;
 
         [HttpGet]
         public async Task<ActionResult<IList<DoorReadShallowDTO>>> GetDoors(int pageNumber = 1, int pageSize = 10)
@@ -140,7 +144,7 @@ namespace ClayBackend.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<GroupMemberReadDTO>> AddGroupPermission(Guid id, Guid groupId)
         {
-            if (!await _doorRepository.DoorExistsAsync(id))
+            if (!await _doorRepository.DoorExistsAsync(id) || !await _groupRepository.GroupExistsAsync(groupId))
             {
                 return NotFound();
             }
@@ -154,6 +158,11 @@ namespace ClayBackend.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<GroupMemberReadDTO>> AddUserPermission(Guid id, Guid userId)
         {
+            if (!await _doorRepository.DoorExistsAsync(id) || !await _userRepository.UserExistsAsync(userId))
+            {
+                return NotFound();
+            }
+
             var user = await _doorRepository.AddUserPermissionToDoor(id, userId);
             return Ok(_mapper.Map<UserReadShallowDTO>(user));
         }
